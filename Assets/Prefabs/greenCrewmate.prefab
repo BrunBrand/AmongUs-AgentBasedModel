@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 8556298570195585156}
   m_Layer: 0
   m_Name: greenCrewmate
-  m_TagString: Crewmate
+  m_TagString: Agent
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
