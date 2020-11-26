@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 1255660871390436167}
   - component: {fileID: 573014089215828390}
   - component: {fileID: -8664116190275137979}
+  - component: {fileID: 7913885425624165590}
   m_Layer: 0
   m_Name: pinkCrewmate
   m_TagString: Agent
@@ -109,4 +110,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7a1e6981044ed34ca9642a8928baf98, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  agent: {fileID: 7913885425624165590}
   isImpostor: 0
+--- !u!195 &7913885425624165590
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3288907356943626647}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 0.5
+  m_Speed: 3.5
+  m_Acceleration: 8
+  avoidancePriority: 50
+  m_AngularSpeed: 120
+  m_StoppingDistance: 0
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 2
+  m_BaseOffset: 1
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4
