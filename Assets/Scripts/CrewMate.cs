@@ -29,16 +29,35 @@ public class CrewMate : MonoBehaviour{
     public Transform wallet; // the one that you have to pass you card slowly...
     public Transform[] trash; // there are 3 trashes in the game, but my map will have just 2
     public Transform pad; // the one in reactor where you need to follow the block pattern
-
+    public GameObject[] data;
 
     // the impostor vent positions
 
+    public int index; // decides wich index of dataPosition the position of data obj will be stored
+    public int decision; // make a decision in the start of the game, and whe the objetive is done
+    public float wait; //wait when reaching the objective for complete
+                       // the wait attribute is only available in certain tasks
+
+    public float waitPattern; // the constant value of wait;
 
 
 
-
+    public Vector3[] dataPosition;
 
     void Start(){
+        index = 0;
+       
+        wait = 5;
+
+
+        data = GameObject.FindGameObjectsWithTag("data");
+        
+        foreach(GameObject obj in data){
+
+            dataPosition[index] = obj.transform.position;
+            index++;
+        }        
+
 
         for(int i=0; i< 6; i++){
             receiveTask = Random.Range(0, 6);
@@ -95,11 +114,26 @@ public class CrewMate : MonoBehaviour{
 
     // ---------- CrewMate Methods ---------- //
 
+
+    public void MakeADecision(){
+        decision = Random.Range(0, 3);
+
+
+    }
+
+
     public void GoToObjectives(){
-        
 
 
+        agent.SetDestination(dataPosition[decision]);
+        if (dataPosition[decision].magnitude < 2f && wait >= 0){
+            wait -= Time.deltaTime;
+        } else {
+            wait = 5;
+            MakeADecision();
 
+
+        }
 
 
     }
