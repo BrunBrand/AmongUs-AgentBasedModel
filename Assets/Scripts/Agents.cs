@@ -16,14 +16,24 @@ public class Agents : MonoBehaviour
 
     Vector3[] spawnArea;
 
-
+    
     void Start()
     {
-        Vector3[] spawnArea = new[] {new Vector3(-12.5f, 1.52f, 5.7f), new Vector3(-10.23f, 1.52f, 7.52f), new Vector3(-7.26f, 1.52f, 7.52f),
-                                      new Vector3(-4.48f, 1.52f,5.7f), new Vector3(-12.5f, 1.52f, 3.46f), new Vector3(-10.23f, 1.52f, 1.83f),
-                                      new Vector3(-7.26f, 1.52f, 1.83f), new Vector3(-4.48f, 1.52f, 3.46f)};
+        Vector3[] spawnArea = new[] {new Vector3(-9.19386578f,0.356f,14.1794643f),
+                                     new Vector3(-2.86f, 0.356f, 12.58f),
+                                     new Vector3(0.1744623f, 0.356f, 7.133203f),
+                                     new Vector3(0.806316f, 0.356f,1.287264f),
+                                     new Vector3(-2.45715f, 0.356f, -4.005596f),
+                                     new Vector3(-7.880685f, 0.356f, -6.942453f),
+                                     new Vector3(-14.45415f, 0.356f, -6.030566f),
+                                     new Vector3(-19.25f, 0.356f, -0.68f),
+                                     new Vector3(-19.8600006f,0.356f,6.80000019f),
+                                     new Vector3(-15.6599998f,0.356f,12.4300003f),
 
-        _impostorChooser = Random.Range(0, 8);
+
+        };
+
+        _impostorChooser = Random.Range(0, 9);
         for (int i = 0; i < prefabs.Length; i++)
         {
             GameObject crewMate = Instantiate(prefabs[i], spawnArea[i], Quaternion.identity);

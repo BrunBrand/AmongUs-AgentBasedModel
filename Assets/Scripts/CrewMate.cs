@@ -38,6 +38,8 @@ public class CrewMate : MonoBehaviour{
     public float wait; //wait when reaching the objective for complete
                        // the wait attribute is only available in certain tasks
 
+    public bool firstMove;
+
     public float waitPattern; // the constant value of wait;
 
 
@@ -45,23 +47,25 @@ public class CrewMate : MonoBehaviour{
     public Vector3[] dataPosition;
 
     void Start(){
+        firstMove = true;
+        receiveTask = 10;
         index = 0;
-       
         wait = 5;
+        dataPosition = new Vector3[3];        
 
-
-        data = GameObject.FindGameObjectsWithTag("data");
+        data = GameObject.FindGameObjectsWithTag("Data");
         
         foreach(GameObject obj in data){
 
             dataPosition[index] = obj.transform.position;
             index++;
-        }        
+        }
 
-
-        for(int i=0; i< 6; i++){
-            receiveTask = Random.Range(0, 6);
-            Debug.Log(receiveTask);
+        if (!isImpostor){
+            for (int i = 0; i < 6; i++){
+                receiveTask = Random.Range(0, 7); //define which task the crewmate is going to peform
+                Debug.Log("receveid task is: " + receiveTask);
+            }
         }
     
     }
@@ -117,25 +121,32 @@ public class CrewMate : MonoBehaviour{
 
     public void MakeADecision(){
         decision = Random.Range(0, 3);
-
-
+        Debug.Log("Is making a decision, has decided " + decision);
+        firstMove = false;
     }
 
 
-    public void GoToObjectives(){
+    public void GoToObjectives() {
 
-
-        agent.SetDestination(dataPosition[decision]);
-        if (dataPosition[decision].magnitude < 2f && wait >= 0){
-            wait -= Time.deltaTime;
-        } else {
-            wait = 5;
-            MakeADecision();
-
-
+        switch (receiveTask) {
+            case 6:
+                Debug.Log("is goin to to objective");
+                agent.SetDestination(dataPosition[decision]);
+                Debug.DrawRay(agent.transform.position, dataPosition[decision]);
+                if (dataPosition[decision].magnitude < 2f && wait >= 0){
+                    while (wait >= 0)
+                    {
+                        Debug.Log("Is waiting for completition");
+                        wait -= Time.deltaTime;
+                    }
+                    Debug.Log("Task Completed");
+                    MakeADecision();
+                }
+                if (firstMove){
+                    MakeADecision();
+                }
+                break;
         }
-
-
     }
 
 
