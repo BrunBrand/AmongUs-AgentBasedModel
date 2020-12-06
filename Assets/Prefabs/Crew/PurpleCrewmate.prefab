@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 4300715052871985871}
   - component: {fileID: -4415681639235771193}
   - component: {fileID: -6735593475974006600}
+  - component: {fileID: 5610264582985239147}
   m_Layer: 0
   m_Name: PurpleCrewmate
   m_TagString: Agent
@@ -49,8 +50,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   agent: {fileID: 4300715052871985871}
+  fov: {fileID: 5610264582985239147}
   isImpostor: 0
-  receiveTask: 0
+  receiveTask: 
   roundTable: {fileID: 0}
   crewmates: []
   data: []
@@ -77,6 +79,7 @@ MonoBehaviour:
   firstMove: 0
   waitPattern: 0
   receiveTaskList: 
+  positionOfDraw: {x: 0, y: 0, z: 0}
   tasksArray: 
   counter: 0
 --- !u!195 &4300715052871985871
@@ -89,7 +92,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 10
+  m_Speed: 6
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
@@ -130,6 +133,28 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &5610264582985239147
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3738854695114152}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f80dfcbc236eb442adb1d098a5f4590, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  viewRadius: 26
+  viewAngle: 360
+  targetMask:
+    serializedVersion: 2
+    m_Bits: 256
+  obstacleMask:
+    serializedVersion: 2
+    m_Bits: 512
+  crew: {fileID: -3392414345199912499}
+  visibleTargets: []
 --- !u!1 &522490305207278237
 GameObject:
   m_ObjectHideFlags: 0

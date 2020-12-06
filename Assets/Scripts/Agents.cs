@@ -14,17 +14,19 @@ public class Agents : MonoBehaviour
     public CrewMate crew;
 
 
-    Vector3[] spawnArea;
+    public Vector3[] spawnArea;
 
     public int randomTask;
     List<int> receiveTaskList = new List<int>();
 
     private int counter;
 
+    GameObject crewMate;
 
-    void Start()
+
+    void Awake()
     {
-        Vector3[] spawnArea = new[] {new Vector3(-9.19386578f,0.356f,14.1794643f),
+        Vector3[] spawnArea =       {new Vector3(-9.19386578f,0.356f,14.1794643f),
                                      new Vector3(-2.86f, 0.356f, 12.58f),
                                      new Vector3(0.1744623f, 0.356f, 7.133203f),
                                      new Vector3(0.806316f, 0.356f,1.287264f),
@@ -43,7 +45,7 @@ public class Agents : MonoBehaviour
         _impostorChooser = Random.Range(0, 9);
         for (int i = 0; i < prefabs.Length; i++)
         {
-            GameObject crewMate = Instantiate(prefabs[i], spawnArea[i], Quaternion.identity);
+            crewMate = Instantiate(prefabs[i], spawnArea[i], Quaternion.identity);
             crewMate.transform.parent = crewArray.transform;
 
             crewList = GameObject.FindGameObjectsWithTag("Agent");
@@ -53,10 +55,15 @@ public class Agents : MonoBehaviour
                 if (i == _impostorChooser)
                 {
                     crewMateScript.isImpostor = true;
+                    //crewMateScript.gameObject.layer = 10;
+                    crewMateScript.gameObject.layer = 8;
                     crewMateScript.tag = "Impostor";
                 }
-                else crewMateScript.tag = "Crewmate";
-
+                else
+                {
+                    crewMateScript.gameObject.layer = 8;
+                    crewMateScript.tag = "Crewmate";
+                }
             }
 
             /*foreach(GameObject go in crewList){
@@ -91,6 +98,13 @@ public class Agents : MonoBehaviour
     }
 
 
+
+    /*public void GoToSpawnArea(){
+        for(int i = 0; i < 9 ; i++){
+            prefabs[i].transform.position = spawnArea[i];
+        }
+
+    }*/
 
     // Update is called once per frame
     void Update()

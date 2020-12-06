@@ -7,6 +7,7 @@ using System.Linq;
 public class CrewMate : MonoBehaviour{
 
     public NavMeshAgent agent;
+    public Agents agente;
 
     public bool isImpostor;
 
@@ -16,7 +17,7 @@ public class CrewMate : MonoBehaviour{
     Vector3 wander;
 
 
-    public int receiveTask;
+    public int[] receiveTask;
 
     public Transform roundTable; // the table with the emergency button
 
@@ -68,7 +69,9 @@ public class CrewMate : MonoBehaviour{
     public List<int> receiveTaskList = new List<int>();
 
 
-    
+    public Vector3 positionOfDraw;
+
+    GameObject[] allCrewMembers;
 
     public int[] tasksArray;
 
@@ -76,18 +79,44 @@ public class CrewMate : MonoBehaviour{
 
     public int counter = 0;
 
+    public Vector3[] spawnArea =     {new Vector3(-9.19386578f,0.356f,14.1794643f),
+                                     new Vector3(-2.86f, 0.356f, 12.58f),
+                                     new Vector3(0.1744623f, 0.356f, 7.133203f),
+                                     new Vector3(0.806316f, 0.356f,1.287264f),
+                                     new Vector3(-2.45715f, 0.356f, -4.005596f),
+                                     new Vector3(-7.880685f, 0.356f, -6.942453f),
+                                     new Vector3(-14.45415f, 0.356f, -6.030566f),
+                                     new Vector3(-19.25f, 0.356f, -0.68f),
+                                     new Vector3(-19.8600006f,0.356f,6.80000019f),
+                                     new Vector3(-15.6599998f,0.356f,12.4300003f),
+
+
+        };
+
     void Start(){
+
+
+        
+
+
         firstMove = true;
-        receiveTask = 10;
+        receiveTask = new int[5];
+        receiveTask[0] = 10;
         index = 0;
         wait = 5;
+
+        
+       
+
         dataPosition = new Vector3[3];
         cablePosition = new Vector3[3];
         enginePosition = new Vector3[3];
         trashPosition = new Vector3[3];
-
+        
 
         explosionPosition = new Vector3[2];
+
+        
 
       
 
@@ -107,30 +136,13 @@ public class CrewMate : MonoBehaviour{
 
         crewmates = GameObject.FindGameObjectsWithTag("Crewmate");
 
-
-       
-
+        allCrewMembers = FindGameObjecstWithLayer(8);
+        
 
         if (!isImpostor){
-
-            receiveTask = Random.Range(0, 7);
-            /*foreach (GameObject go in crewmates)
-            {
-                if (go.tag == "Impostor")
-                {
-                    break;
-                }
-                else if (go.tag == "Crewmate")
-                {
-                    //receiveTask = receiveTaskList[counter];
-                  
-                    receiveTask = tasksArray[counter];
-                    Debug.Log("RECEIVE TASK É : " + receiveTask);
-                    counter++;
-                }
-            }*/
-
-     
+            for (int i = 0; i < receiveTask.Length; i++){
+                receiveTask[i] = Random.Range(0, 7);
+            }
 
             foreach (GameObject obj in data)
             {
@@ -157,7 +169,19 @@ public class CrewMate : MonoBehaviour{
                 trashPosition[index] = obj.transform.position;
                 index++;
             }
+            index = 0;
+            foreach( GameObject obj in explosion)
+            {
+                explosionPosition[index] = obj.transform.position;
+                index++;
+            }
 
+            scanPosition = scan.transform.position;
+            
+
+            padPosition = pad.transform.position;
+            walletPosition = wallet.transform.position;
+            o2Position = o2.transform.position;
 
 
 
@@ -166,10 +190,30 @@ public class CrewMate : MonoBehaviour{
     }
 
 
+    public void GoToSpawnArea(){
+        for( int i = 0; i < 9; i++)
+        {
+            allCrewMembers[i].transform.position = spawnArea[i];
+        }
+    }
 
-    
-
-
+ 
+    public GameObject[] FindGameObjecstWithLayer(int layer){
+        GameObject[] gameObjectArray = FindObjectsOfType(typeof(GameObject)) as GameObject[];
+        List<GameObject> gameObjectList = new List<GameObject>();
+        for(int i = 0; i < gameObjectArray.Length; i++)
+        {
+            if(gameObjectArray[i].layer == layer)
+            {
+                gameObjectList.Add(gameObjectArray[i]);
+            }
+        }
+        if(gameObjectList.Count == 0)
+        {
+            return null;
+        }
+        return gameObjectList.ToArray();
+    }
 
     void Update(){
 
@@ -180,6 +224,7 @@ public class CrewMate : MonoBehaviour{
 
             case false:
                 GoToObjectives();
+                Debug.DrawLine(agent.transform.position, positionOfDraw);
                 break;
         }
 
@@ -227,54 +272,95 @@ public class CrewMate : MonoBehaviour{
 
 
     public void GoToObjectives() {
-
-        switch (receiveTask) {
-            case 0:
-                agent.SetDestination(cablePosition[decision]);
-                Debug.DrawRay(agent.transform.position, cablePosition[decision]);
-                break;
-
-            case 1:
-                agent.SetDestination(enginePosition[decision]);
-                Debug.DrawRay(agent.transform.position, enginePosition[decision]);
-                break;
-
-            case 2:
-                break;
-
-            case 3:
-                break;
-
-            case 4:
-                break;
-
-            case 5:
-                break;
-
-            case 6:
-                Debug.Log("is goin to to objective");
-                agent.SetDestination(dataPosition[decision]);
-                Debug.DrawRay(agent.transform.position, dataPosition[decision]);
-                if (Vector3.Distance(dataPosition[decision], agent.transform.position) < 2f){
-                    /*while (wait >= 0)
+        for (int i = 0; i < receiveTask.Length; i++) {
+            switch (receiveTask[i]) {
+                case 0:
+                    Debug.Log("is goin to to objective");
+                    agent.SetDestination(dataPosition[decision]);
+                 
+                    positionOfDraw = dataPosition[decision];
+                    if (Vector3.Distance(dataPosition[decision], agent.transform.position) < 2f)
                     {
-                        Debug.Log("Is waiting for completition");
-                        wait -= Time.deltaTime;
-                    }*/
-                    Invoke("MakeADecision", 5);
-                    Debug.Log("Task Completed");
-                    //MakeADecision();
+                        /*while (wait >= 0)
+                        {
+                            Debug.Log("Is waiting for completition");
+                            wait -= Time.deltaTime;
+                        }*/
+                        Invoke("MakeADecision", 5);
+                        Debug.Log("Task Completed");
+                        //MakeADecision();
+                    }
+                    if (firstMove)
+                    {
+                        MakeADataDecision();
+                    }
+                    break;
+
+                case 1:
+                    agent.SetDestination(cablePosition[decision]);
+          
+                    positionOfDraw = cablePosition[decision];
+                    if (firstMove)
+                    {
+                        MakeADataDecision();
+                    }
+                    break;
+
+                case 2:
+                    agent.SetDestination(enginePosition[decision]);
+           
+                    positionOfDraw = enginePosition[decision];
+                    if (firstMove)
+                    {
+                        MakeADataDecision();
+                    }
+                    break;
+
+                case 3:
+                    agent.SetDestination(trashPosition[decision]);
+            
+                    positionOfDraw = trashPosition[decision];
+                    if (firstMove)
+                    {
+                        MakeADataDecision();
+                    }
+                    break;
+
+                case 4:
+                    agent.SetDestination(scanPosition);
+       
+                    positionOfDraw = scanPosition;
+                    break;
+
+                case 5:
+                    agent.SetDestination(walletPosition);
+                    positionOfDraw = walletPosition;
+                    break;
+
+                case 6:
+                    agent.SetDestination(padPosition);
+                    positionOfDraw = padPosition;
+                    break;
                 }
-                if (firstMove){
-                    MakeADataDecision();
-                }
-                break;
+            }
+        }
+    
+
+    public void ApproachDeadBody(Transform target){
+        //Agents agente = gameObject.GetComponent<Agents>();
+        agent.SetDestination(target.position);
+        if(Vector3.Distance(agent.transform.position, target.position) < 5f){
+            ReportBody();
+      
         }
     }
 
 
     public void ReportBody(){
 
+
+        GoToSpawnArea();
+        
     }
 
 

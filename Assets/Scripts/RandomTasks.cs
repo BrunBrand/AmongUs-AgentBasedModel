@@ -29,7 +29,7 @@ public class RandomTasks : MonoBehaviour
 
 
 
-    public void RandomizeTask()
+    /*public void RandomizeTask()
     {
         for (int i = 0; i < tasks; i++)
         {
@@ -58,7 +58,7 @@ public class RandomTasks : MonoBehaviour
                 counter++;
             }
         }
-    }
+    }*/
 
 
     // Update is called once per frame

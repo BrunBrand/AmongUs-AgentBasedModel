@@ -17,6 +17,7 @@ TagManager:
   - Pad
   - Explosion
   - Trash
+  - Dead
   layers:
   - Default
   - TransparentFX
@@ -26,10 +27,10 @@ TagManager:
   - UI
   - 
   - 
-  - 
-  - 
-  - 
-  - 
+  - Crewmate
+  - Obstacle
+  - Impostor
+  - Dead
   - 
   - 
   - 
