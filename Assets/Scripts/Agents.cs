@@ -11,12 +11,17 @@ public class Agents : MonoBehaviour
 
     private int _impostorChooser;
 
-    CrewMate crew = new CrewMate();
+    public CrewMate crew;
 
 
     Vector3[] spawnArea;
 
-    
+    public int randomTask;
+    List<int> receiveTaskList = new List<int>();
+
+    private int counter;
+
+
     void Start()
     {
         Vector3[] spawnArea = new[] {new Vector3(-9.19386578f,0.356f,14.1794643f),
@@ -32,6 +37,8 @@ public class Agents : MonoBehaviour
 
 
         };
+
+    
 
         _impostorChooser = Random.Range(0, 9);
         for (int i = 0; i < prefabs.Length; i++)
@@ -49,11 +56,32 @@ public class Agents : MonoBehaviour
                     crewMateScript.tag = "Impostor";
                 }
                 else crewMateScript.tag = "Crewmate";
-                
+
             }
 
+            /*foreach(GameObject go in crewList){
 
+                if (crew.receiveTask != 10 && !crew.isImpostor) {
+
+                    while (!receiveTaskList.Contains(randomTask))
+                    {
+                        randomTask = Random.Range(0, 6);
+                        if (receiveTaskList)
+                        {
+                            receiveTaskList.Add(randomTask);
+                            crew.receiveTask = randomTask;
+                        }
+                    }
+                    
+                }
+            }*/
         }
+           
+          
+
+
+
+        
 
 
 

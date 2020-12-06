@@ -140,19 +140,33 @@ MonoBehaviour:
   isImpostor: 0
   receiveTask: 0
   roundTable: {fileID: 0}
-  medBay: {fileID: 0}
-  reactor: []
-  electricCables: []
-  wallet: {fileID: 0}
-  trash: []
-  pad: {fileID: 0}
+  crewmates: []
   data: []
+  cable: []
+  engine: []
+  trash: []
+  dataPosition: []
+  cablePosition: []
+  enginePosition: []
+  trashPosition: []
+  explosion: []
+  explosionPosition: []
+  scan: {fileID: 0}
+  pad: {fileID: 0}
+  wallet: {fileID: 0}
+  scanPosition: {x: 0, y: 0, z: 0}
+  padPosition: {x: 0, y: 0, z: 0}
+  walletPosition: {x: 0, y: 0, z: 0}
+  o2: {fileID: 0}
+  o2Position: {x: 0, y: 0, z: 0}
   index: 0
   decision: 0
   wait: 0
   firstMove: 0
   waitPattern: 0
-  dataPosition: []
+  receiveTaskList: 
+  tasksArray: 
+  counter: 0
 --- !u!195 &-8423985020361057505
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -163,7 +177,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 3.5
+  m_Speed: 10
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
