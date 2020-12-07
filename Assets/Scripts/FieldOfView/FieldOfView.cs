@@ -32,8 +32,13 @@ public class FieldOfView : MonoBehaviour{
         visibleTargets.Clear();
         Collider[] targetsInViewRadius = Physics.OverlapSphere(transform.position, viewRadius, targetMask);
 
+        if(targetsInViewRadius.Length == 1)
+        {
+            Debug.Log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+        }
         for(int i = 0; i < targetsInViewRadius.Length; i++){
             Transform target = targetsInViewRadius[i].transform;
+            
             Vector3 dirToTarget = (target.position - transform.position).normalized;
             if(Vector3.Angle(transform.forward, dirToTarget) < viewAngle / 2)
             {
@@ -41,12 +46,22 @@ public class FieldOfView : MonoBehaviour{
                 if(!Physics.Raycast (transform.position, dirToTarget, dstToTarget, obstacleMask))
                 {
                     visibleTargets.Add(target);
+           
                     if (target.gameObject.tag == "Dead") {
                         crew.ApproachDeadBody(target);
                         //crew.agent.SetDestination(target.position); // Approaching dead body
-                     
+                        
                     }
+                 
+                    
+                    
+                    
                 }
+
+                /*if(Physics.Raycast(transform.position, dirToTarget, dstToTarget, targetMask))
+                {
+                    Debug.Log("THERE IS NO ONE THERE !!!!!!");
+                }*/
             }
         }
     }

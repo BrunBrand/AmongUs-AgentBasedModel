@@ -8,6 +8,7 @@ public class CrewMate : MonoBehaviour{
 
     public NavMeshAgent agent;
     public Agents agente;
+    public FieldOfView fov;
 
     public bool isImpostor;
 
@@ -233,12 +234,17 @@ public class CrewMate : MonoBehaviour{
 
     // ---------- Impostor Methods ---------- //
     public void Wander(){
-        _randomX = Random.Range(-10, 10);
+        /*_randomX = Random.Range(-10, 10);
         _randomZ = Random.Range(-10, 10);
 
         wander = new Vector3(_randomX, 0, _randomZ);
         agent.SetDestination(wander);
-    
+        */
+        int aleatory = Random.Range(0, 8);
+        agent.SetDestination(crewmates[aleatory].transform.position);
+        //Debug.Log("Impostor anda em direção a " + crewmates[aleatory].transform.position);
+
+
     }
 
     public void Sabotage(){
@@ -266,7 +272,7 @@ public class CrewMate : MonoBehaviour{
         decision = Random.Range(0, 3);
     
       
-        Debug.Log("Is making a decision, has decided " + decision);
+        //Debug.Log("Is making a decision, has decided " + decision);
         firstMove = false;
     }
 
@@ -275,7 +281,7 @@ public class CrewMate : MonoBehaviour{
         for (int i = 0; i < receiveTask.Length; i++) {
             switch (receiveTask[i]) {
                 case 0:
-                    Debug.Log("is goin to to objective");
+                  
                     agent.SetDestination(dataPosition[decision]);
                  
                     positionOfDraw = dataPosition[decision];
@@ -287,8 +293,7 @@ public class CrewMate : MonoBehaviour{
                             wait -= Time.deltaTime;
                         }*/
                         Invoke("MakeADecision", 5);
-                        Debug.Log("Task Completed");
-                        //MakeADecision();
+         
                     }
                     if (firstMove)
                     {
@@ -351,7 +356,7 @@ public class CrewMate : MonoBehaviour{
         agent.SetDestination(target.position);
         if(Vector3.Distance(agent.transform.position, target.position) < 5f){
             ReportBody();
-      
+            
         }
     }
 
