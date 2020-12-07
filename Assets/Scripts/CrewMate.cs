@@ -26,48 +26,65 @@ public class CrewMate : MonoBehaviour{
 
     public GameObject[] crewmates;
     
-    
+    [HideInInspector]
     public GameObject[] data; // catch the data gameobject and put it in a array with his tag
+    [HideInInspector]
     public GameObject[] cable; // the eletric cables
+    [HideInInspector]
     public GameObject[] engine; // the fuel + engine
+    [HideInInspector]
     public GameObject[] trash; // the door that opens to get the trash out
-    
+
+    [HideInInspector]
     public Vector3[] dataPosition;
+    [HideInInspector]
     public Vector3[] cablePosition;
+    [HideInInspector]
     public Vector3[] enginePosition;
+    [HideInInspector]
     public Vector3[] trashPosition;
 
     // -- not a task but a sabotage task
+    [HideInInspector]
     public GameObject[] explosion;
+    [HideInInspector]
     public Vector3[] explosionPosition;
 
     // tasks that don't need arrays
+    [HideInInspector]
     public GameObject scan;
+    [HideInInspector]
     public GameObject pad;
+    [HideInInspector]
     public GameObject wallet;
 
+    [HideInInspector]
     public Vector3 scanPosition;
+    [HideInInspector]
     public Vector3 padPosition;
+    [HideInInspector]
     public Vector3 walletPosition;
 
     // -- not a task but a sabotage task (the original game has 2, but i will have only one)
+    [HideInInspector]
     public GameObject o2;
 
+    [HideInInspector]
     public Vector3 o2Position;
     // the impostor vent positions
 
     public int index; // decides wich index of dataPosition the position of data obj will be stored
     public int decision; // make a decision in the start of the game, and whe the objetive is done
-    public float wait; //wait when reaching the objective for complete
-                       // the wait attribute is only available in certain tasks
+    public float timeData; //wait when reaching the objective for complete
+    public float timer;               // the wait attribute is only available in certain tasks
 
     public bool firstMove;
 
     public float waitPattern; // the constant value of wait;
 
 
-
     public List<int> receiveTaskList = new List<int>();
+    public List<int> decisionList = new List<int>();
 
 
     public Vector3 positionOfDraw;
@@ -75,10 +92,15 @@ public class CrewMate : MonoBehaviour{
     GameObject[] allCrewMembers;
 
     public int[] tasksArray;
+    public int[] decisionArray;
 
     //private int tasks = 9;
 
     public int counter = 0;
+
+    public int aleatory;
+
+    public int movementSet; // controls the flow of decisions to ensure the correct assignment
 
     public Vector3[] spawnArea =     {new Vector3(-9.19386578f,0.356f,14.1794643f),
                                      new Vector3(-2.86f, 0.356f, 12.58f),
@@ -94,20 +116,23 @@ public class CrewMate : MonoBehaviour{
 
         };
 
+    public int tasks = 7;
+    public int indexer = 0;
+
     void Start(){
 
-
+        movementSet = 0;
         
 
 
         firstMove = true;
-        receiveTask = new int[5];
+        receiveTask = new int[9];
         receiveTask[0] = 10;
         index = 0;
-        wait = 5;
-
+        timeData = 6;
         
-       
+
+        aleatory = Random.Range(0, 8);
 
         dataPosition = new Vector3[3];
         cablePosition = new Vector3[3];
@@ -139,11 +164,45 @@ public class CrewMate : MonoBehaviour{
 
         allCrewMembers = FindGameObjecstWithLayer(8);
         
-
+        // assign task for crewmates (impostor will be 10 forever, id est, he doesn't do nothing)
         if (!isImpostor){
-            for (int i = 0; i < receiveTask.Length; i++){
+  
+           for (int i = 0; i < 9; i++)
+           {
+               receiveTaskList.Add(i);
+           }
+
+           tasksArray = receiveTaskList.OrderBy(tvz => System.Guid.NewGuid()).ToArray();
+
+           for (int i = 0; i < 9; i++)
+           {
+               print(receiveTaskList[i]);
+           }
+            counter = 0;
+           foreach (GameObject go in crewmates)
+           {
+               if (go.tag == "Impostor")
+               {
+                   break;
+               }
+               else if (go.tag == "Crewmate")
+               {
+                    //receiveTask = receiveTaskList[counter];
+                    Debug.Log("THE BOUND OF THE ARRAY receiveTask is: " + counter);
+                   receiveTask[counter] = tasksArray[counter];
+                   Debug.Log("RECEIVE TASK É : " + receiveTask);
+                   counter++;
+               }
+           }
+            // the code below is temp inavailable
+            /*for (int i = 0; i < receiveTask.Length; i++){
                 receiveTask[i] = Random.Range(0, 7);
-            }
+            }*/
+
+
+
+
+
 
             foreach (GameObject obj in data)
             {
@@ -190,6 +249,7 @@ public class CrewMate : MonoBehaviour{
         }
     }
 
+   
 
     public void GoToSpawnArea(){
         for( int i = 0; i < 9; i++)
@@ -233,6 +293,23 @@ public class CrewMate : MonoBehaviour{
     }
 
     // ---------- Impostor Methods ---------- //
+
+
+
+    public void FollowCrewMate()
+    {
+        //yield return new WaitForSeconds(10f);
+        if (crewmates[aleatory].transform.tag == "Crewmate")
+        {
+            agent.SetDestination(crewmates[aleatory].transform.position.normalized);
+        } else
+        {
+
+        }
+        //yield return new WaitForSeconds(10f);
+        
+    }
+
     public void Wander(){
         /*_randomX = Random.Range(-10, 10);
         _randomZ = Random.Range(-10, 10);
@@ -240,9 +317,11 @@ public class CrewMate : MonoBehaviour{
         wander = new Vector3(_randomX, 0, _randomZ);
         agent.SetDestination(wander);
         */
-        int aleatory = Random.Range(0, 8);
-        agent.SetDestination(crewmates[aleatory].transform.position);
+
+        //agent.SetDestination(crewmates[aleatory].transform.position);
         //Debug.Log("Impostor anda em direção a " + crewmates[aleatory].transform.position);
+        //StartCoroutine("FollowCrewMate");
+        FollowCrewMate();
 
 
     }
@@ -260,7 +339,14 @@ public class CrewMate : MonoBehaviour{
     }
 
 
-    public void Kill(){
+    public void Kill(Collider[] targetInViewRadius){
+        if (!isImpostor){
+            return;
+        }
+        else{
+            agent.SetDestination(targetInViewRadius[1].gameObject.transform.position);
+        }
+
 
     }
 
@@ -268,37 +354,54 @@ public class CrewMate : MonoBehaviour{
     // ---------- CrewMate Methods ---------- //
 
 
-    public void MakeADataDecision(){
-        decision = Random.Range(0, 3);
-    
-      
-        //Debug.Log("Is making a decision, has decided " + decision);
+    public void MakeADecisionInArrayTask(){
+        //decision = Random.Range(0, 3);
+        for (int i = 0; i < 3; i++)
+        {
+            decisionList.Add(i);
+        }
+
+        decisionArray = decisionList.OrderBy(tvz => System.Guid.NewGuid()).ToArray();
+
+        /*for (int i = 0; i < 3; i++)
+        {
+            print("ORDEM DO ARRAY DE DECISION: " + tasksArray[i]);
+        }*/
+        decision = decisionArray[movementSet];
+
+        timer = timeData;
         firstMove = false;
+        movementSet++;
+        if(movementSet == 2){
+            movementSet = 0;
+            tasksArray[indexer] += tasksArray[indexer++];
+        }
+       
     }
 
 
     public void GoToObjectives() {
-        for (int i = 0; i < receiveTask.Length; i++) {
-            switch (receiveTask[i]) {
+        for (int i = 0; i < tasksArray.Length; i++) {
+            switch (tasksArray[i]) {
                 case 0:
                   
+                    if (firstMove)
+                    {
+                        MakeADecisionInArrayTask();
+                    }
                     agent.SetDestination(dataPosition[decision]);
                  
                     positionOfDraw = dataPosition[decision];
                     if (Vector3.Distance(dataPosition[decision], agent.transform.position) < 2f)
                     {
-                        /*while (wait >= 0)
+                        timer -= Time.deltaTime;
+                        if(timer <= 0)
                         {
-                            Debug.Log("Is waiting for completition");
-                            wait -= Time.deltaTime;
-                        }*/
-                        Invoke("MakeADecision", 5);
+                            MakeADecisionInArrayTask();
+                        }
          
                     }
-                    if (firstMove)
-                    {
-                        MakeADataDecision();
-                    }
+                  
                     break;
 
                 case 1:
@@ -307,7 +410,7 @@ public class CrewMate : MonoBehaviour{
                     positionOfDraw = cablePosition[decision];
                     if (firstMove)
                     {
-                        MakeADataDecision();
+                        MakeADecisionInArrayTask();
                     }
                     break;
 
@@ -317,7 +420,7 @@ public class CrewMate : MonoBehaviour{
                     positionOfDraw = enginePosition[decision];
                     if (firstMove)
                     {
-                        MakeADataDecision();
+                        MakeADecisionInArrayTask();
                     }
                     break;
 
@@ -327,7 +430,7 @@ public class CrewMate : MonoBehaviour{
                     positionOfDraw = trashPosition[decision];
                     if (firstMove)
                     {
-                        MakeADataDecision();
+                        MakeADecisionInArrayTask();
                     }
                     break;
 

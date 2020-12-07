@@ -50,6 +50,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   agent: {fileID: -3494838407933420197}
+  agente: {fileID: 0}
   fov: {fileID: -6646139418003066530}
   isImpostor: 0
   receiveTask: 
@@ -75,13 +76,26 @@ MonoBehaviour:
   o2Position: {x: 0, y: 0, z: 0}
   index: 0
   decision: 0
-  wait: 0
+  timeData: 0
+  timer: 0
   firstMove: 0
   waitPattern: 0
   receiveTaskList: 
   positionOfDraw: {x: 0, y: 0, z: 0}
   tasksArray: 
   counter: 0
+  aleatory: 0
+  spawnArea:
+  - {x: -9.193866, y: 0.356, z: 14.179464}
+  - {x: -2.86, y: 0.356, z: 12.58}
+  - {x: 0.1744623, y: 0.356, z: 7.133203}
+  - {x: 0.806316, y: 0.356, z: 1.287264}
+  - {x: -2.45715, y: 0.356, z: -4.005596}
+  - {x: -7.880685, y: 0.356, z: -6.942453}
+  - {x: -14.45415, y: 0.356, z: -6.030566}
+  - {x: -19.25, y: 0.356, z: -0.68}
+  - {x: -19.86, y: 0.356, z: 6.8}
+  - {x: -15.66, y: 0.356, z: 12.43}
 --- !u!195 &-3494838407933420197
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -92,7 +106,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 6
+  m_Speed: 5
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120

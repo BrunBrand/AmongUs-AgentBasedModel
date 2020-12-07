@@ -20,10 +20,7 @@ public class FieldOfViewEditor : Editor{
         Handles.color = Color.red;
         foreach(Transform visibleTarget in fov.visibleTargets)
         {
-            if(visibleTarget.position == null)
-            {
-                Debug.Log("aaaaaaaaaaaaaaaaaaaaa");
-            }
+            
             Handles.DrawLine(fov.transform.position, visibleTarget.position);
         }
     }
