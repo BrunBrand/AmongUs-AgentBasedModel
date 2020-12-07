@@ -1,3 +1,4 @@
 # AmongUs-AgentBasedModel
 #### Among Us but it's all AI
-### Design credits: [LuisEduardoBF](https://github.com/LuisEduardoBF)
+### Developer: LordFarron
+### Designers: [LuisEduardoBF](https://github.com/LuisEduardoBF) and [LordFarron](https://github.com/LordFarron)
