@@ -5,13 +5,14 @@ using UnityEngine.UI;
 
 public class Agents : MonoBehaviour{
 
-    public Slider slider;
+    public Slider sliderAgent;
+    public Slider sliderImpostor;
 
     public GameObject[] crewList;
     public GameObject crewArray;
     public GameObject[] prefabs;
 
-    private int _impostorChooser;
+    private int[] _impostorChooser;
 
     public CrewMate crew;
 
@@ -30,36 +31,31 @@ public class Agents : MonoBehaviour{
 
     public int numberOfAgents;
 
+    public int numberOfImpostor;
 
+    public int count;
     void Awake(){
 
-        numberOfAgents = (int)slider.value;
-        
-
+        numberOfAgents = (int)sliderAgent.value;
+        numberOfImpostor = (int)sliderImpostor.value;
+        _impostorChooser = new int[numberOfImpostor];
+        count = 0;
         startButtonIsClicked = false;
         if (startButtonIsClicked)
         {
             StartAgents();
         }
-           
-          
-
-
-
-        
-
-
-
-
-
-
     }
 
     public void StartAgents()
     {
 
-        numberOfAgents = (int)slider.value;
-
+        numberOfAgents = (int)sliderAgent.value;
+        numberOfImpostor = (int)sliderImpostor.value;
+        Debug.Log(numberOfImpostor);
+        _impostorChooser = new int[numberOfImpostor + 1];
+        Debug.Log(_impostorChooser.Length);
+        count = 0;
 
         Vector3[] spawnArea =       {new Vector3(-9.19386578f,0.356f,14.1794643f),
                                      new Vector3(-2.86f, 0.356f, 12.58f),
@@ -75,9 +71,13 @@ public class Agents : MonoBehaviour{
 
         };
 
-        
 
-        _impostorChooser = Random.Range(0, numberOfAgents);
+        for (int i = 0; i < numberOfImpostor; i++)
+        {
+
+            _impostorChooser[i] = Random.Range(0, numberOfAgents);
+            Debug.Log("IMPOSTOR CHOOSER" + _impostorChooser[i]);
+        }
         for (int i = 0; i < numberOfAgents; i++)
         {
             crewMate = Instantiate(prefabs[i], spawnArea[i], Quaternion.identity);
@@ -87,10 +87,11 @@ public class Agents : MonoBehaviour{
             CrewMate crewMateScript = crewMate.gameObject.GetComponent<CrewMate>();
             foreach (GameObject go in crewList)
             {
-                if (i == _impostorChooser)
+                
+                if (i == _impostorChooser[count])
                 {
                     crewMateScript.isImpostor = true;
-                    //crewMateScript.gameObject.layer = 10;
+                    //crewMateScript.gameObject.layer = 10; // we don't assign the impostor layer because we use the crewmate layer to search for targets
                     crewMateScript.gameObject.layer = 8;
                     crewMateScript.tag = "Impostor";
                 }
@@ -99,33 +100,19 @@ public class Agents : MonoBehaviour{
                     crewMateScript.gameObject.layer = 8;
                     crewMateScript.tag = "Crewmate";
                 }
-            }
-
-            /*foreach(GameObject go in crewList){
-
-                if (crew.receiveTask != 10 && !crew.isImpostor) {
-
-                    while (!receiveTaskList.Contains(randomTask))
-                    {
-                        randomTask = Random.Range(0, 6);
-                        if (receiveTaskList)
-                        {
-                            receiveTaskList.Add(randomTask);
-                            crew.receiveTask = randomTask;
-                        }
-                    }
-                    
+                count++;
+                if (count == numberOfImpostor)
+                {
+                    count = 0;
                 }
-            }*/
+
+
+
+            }
         }
     }
+    
 
-    /*public void GoToSpawnArea(){
-        for(int i = 0; i < 9 ; i++){
-            prefabs[i].transform.position = spawnArea[i];
-        }
-
-    }*/
 
     // Update is called once per frame
     void Update()

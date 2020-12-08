@@ -225,9 +225,6 @@ public class CrewMate : MonoBehaviour{
 
 
 
-
-
-
             foreach (GameObject obj in data)
             {
 
@@ -356,11 +353,6 @@ public class CrewMate : MonoBehaviour{
 
 
 
-
-
-
-
-
     }
 
 
@@ -399,7 +391,6 @@ public class CrewMate : MonoBehaviour{
 
     }
     
-
 
     // ---------- CrewMate Methods ---------- //
 
@@ -588,12 +579,6 @@ public class CrewMate : MonoBehaviour{
     public void CallEmergency(){
 
     }
-
-
-
-
-
-
 
 
 }
