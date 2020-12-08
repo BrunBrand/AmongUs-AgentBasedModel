@@ -20,7 +20,9 @@ public class FieldOfViewEditor : Editor{
         Handles.color = Color.red;
         foreach(Transform visibleTarget in fov.visibleTargets)
         {
-            
+            /*if(visibleTarget.gameObject.tag == "Dead" && visibleTarget.gameObject.tag == "Impostor" && crew){
+
+            }*/
             Handles.DrawLine(fov.transform.position, visibleTarget.position);
         }
     }

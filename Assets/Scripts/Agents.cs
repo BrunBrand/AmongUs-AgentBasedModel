@@ -1,9 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class Agents : MonoBehaviour
-{
+public class Agents : MonoBehaviour{
+
+    public Slider slider;
 
     public GameObject[] crewList;
     public GameObject crewArray;
@@ -25,7 +27,15 @@ public class Agents : MonoBehaviour
 
     public bool startButtonIsClicked;
 
+
+    public int numberOfAgents;
+
+
     void Awake(){
+
+        numberOfAgents = (int)slider.value;
+        
+
         startButtonIsClicked = false;
         if (startButtonIsClicked)
         {
@@ -47,6 +57,10 @@ public class Agents : MonoBehaviour
 
     public void StartAgents()
     {
+
+        numberOfAgents = (int)slider.value;
+
+
         Vector3[] spawnArea =       {new Vector3(-9.19386578f,0.356f,14.1794643f),
                                      new Vector3(-2.86f, 0.356f, 12.58f),
                                      new Vector3(0.1744623f, 0.356f, 7.133203f),
@@ -61,10 +75,10 @@ public class Agents : MonoBehaviour
 
         };
 
+        
 
-
-        _impostorChooser = Random.Range(0, 9);
-        for (int i = 0; i < prefabs.Length; i++)
+        _impostorChooser = Random.Range(0, numberOfAgents);
+        for (int i = 0; i < numberOfAgents; i++)
         {
             crewMate = Instantiate(prefabs[i], spawnArea[i], Quaternion.identity);
             crewMate.transform.parent = crewArray.transform;
