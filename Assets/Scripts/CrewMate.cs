@@ -73,42 +73,51 @@ public class CrewMate : MonoBehaviour{
     [HideInInspector]
     public Vector3 o2Position;
     // the impostor vent positions
-
+    [HideInInspector]
     public int index; // decides wich index of dataPosition the position of data obj will be stored
+    [HideInInspector]
     public int decision; // make a decision in the start of the game, and whe the objetive is done
+    [HideInInspector]
     public float timeData; //wait when reaching the objective for complete
     public float timer;               // the wait attribute is only available in certain tasks
-
+    [HideInInspector]
     public bool firstMove;
-
+    [HideInInspector]
     public float waitPattern; // the constant value of wait;
 
-
+    [HideInInspector]
     public List<int> receiveTaskList = new List<int>();
+    [HideInInspector]
     public List<int> decisionList = new List<int>();
+    [HideInInspector]
     public List<int> decisionEngineList = new List<int>();
+    [HideInInspector]
     public List<int> crewmateThatTheImpostorWillFollowList= new List<int>();
-
+    [HideInInspector]
     public Vector3 positionOfDraw;
-
+    [HideInInspector]
     GameObject[] allCrewMembers;
-
+    [HideInInspector]
     public int[] tasksArray;
+    [HideInInspector]
     public int[] decisionArray;
+    [HideInInspector]
     public int[] decisionEngineArray;
+    [HideInInspector]
     public int[] crewmateThatTheImpostorWillFollowArray;
 
     //private int tasks = 9;
-
+    [HideInInspector]
     public int counter = 0;
 
-    
-
+    public static  bool timeOfKilling; // to assign a false/true after the crewmate dies in function of waiKilling
+    public static float waitKilling; // to count the time
+    [HideInInspector]
     public int movementSet; // controls the flow of decisions to ensure the correct assignment
-
+    [HideInInspector]
     public int task = 0;
     public int aleatory;
-
+    [HideInInspector]
     public Vector3[] spawnArea =     {new Vector3(-9.19386578f,0.356f,14.1794643f),
                                      new Vector3(-2.86f, 0.356f, 12.58f),
                                      new Vector3(0.1744623f, 0.356f, 7.133203f),
@@ -337,16 +346,6 @@ public class CrewMate : MonoBehaviour{
     }
 
     public void Wander(){
-        /*_randomX = Random.Range(-10, 10);
-        _randomZ = Random.Range(-10, 10);
-
-        wander = new Vector3(_randomX, 0, _randomZ);
-        agent.SetDestination(wander);
-        */
-
-        //agent.SetDestination(crewmates[aleatory].transform.position);
-        //Debug.Log("Impostor anda em direção a " + crewmates[aleatory].transform.position);
-        //StartCoroutine("FollowCrewMate");
         FollowCrewMate();
 
 
@@ -366,17 +365,35 @@ public class CrewMate : MonoBehaviour{
 
 
     public void Kill(Collider[] targetInViewRadius){
+        int each = 0;
         if (!isImpostor){
             return;
         }
-        else{
-            agent.SetDestination(targetInViewRadius[0].gameObject.transform.position);
-            if(Vector3.Distance(targetInViewRadius[0].gameObject.transform.position,  agent.transform.position) < 3f)
+        
+        else { 
+            foreach(Collider target in targetInViewRadius)
             {
-                targetInViewRadius[0].gameObject.transform.rotation = new Quaternion(272.823975f, 280.937531f, -6.93134498e-05f, 1);
-                targetInViewRadius[0].gameObject.tag = "Dead"; 
-            }
+                waitKilling = 10f;
+                if (targetInViewRadius[each].gameObject.tag == "Crewmate")
+                {
+                    agent.SetDestination(target.transform.position);
+                    if (Vector3.Distance(target.gameObject.transform.position, agent.transform.position) < 3f)
+                    {
+                        target.gameObject.transform.Rotate(272.823975f, 280.937531f, -6.93134498e-05f);// = new Quaternion(272.823975f, 280.937531f, -6.93134498e-05f, 1);
+                        target.gameObject.tag = "Dead";
+                        target.gameObject.layer = 11;
+                        timeOfKilling = true;
+                        waitKilling -= Time.deltaTime;
+                        if(waitKilling <= 0){
+                            timeOfKilling = false;
+                        }
+                    }
+                    each++;
 
+                }
+
+            }
+           
         }
 
 
@@ -503,10 +520,11 @@ public class CrewMate : MonoBehaviour{
                         /*if(receiveTask[task+1] >= 0 && receiveTask[task+1] <= 3)
                         {
                         
-                        } else*/ if( receiveTask[task+1] >= 4 && receiveTask[task+1] <= 7)
+                        } else*/ /*if( receiveTask[task+1] >= 4 && receiveTask[task+1] <= 7)
                         {
                             task++;
-                        }
+                        }*/
+                        task++;
                         
                     }
                 }
@@ -522,10 +540,9 @@ public class CrewMate : MonoBehaviour{
                     timer -= Time.deltaTime;
                     if (timer <= 0)
                     {
-                        if (receiveTask[task + 1] >= 4 && receiveTask[task + 1] <= 7)
-                        {
+                       
                             task++;
-                        }
+                        
                     }
                 }
                 break;
@@ -539,10 +556,9 @@ public class CrewMate : MonoBehaviour{
                     timer -= Time.deltaTime;
                     if (timer <= 0)
                     {
-                        if (receiveTask[task + 1] >= 4 && receiveTask[task + 1] <= 7)
-                        {
+                      
                             task++;
-                        }
+                        
                     }
                 }
                 break;
@@ -564,7 +580,7 @@ public class CrewMate : MonoBehaviour{
     public void ReportBody(){
 
 
-        GoToSpawnArea();
+        //GoToSpawnArea();
         
     }
 

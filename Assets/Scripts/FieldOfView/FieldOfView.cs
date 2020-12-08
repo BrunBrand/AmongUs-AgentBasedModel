@@ -31,11 +31,12 @@ public class FieldOfView : MonoBehaviour{
     void FindVisibleTargets(){
         visibleTargets.Clear();
         Collider[] targetsInViewRadius = Physics.OverlapSphere(transform.position, viewRadius, targetMask);
-
         if (crew.isImpostor)
         {
-            if (targetsInViewRadius.Length == 1)
-            {
+            Debug.Log("CREW IMPOSTOR BEFORE IF" + targetsInViewRadius.Length);
+            if (targetsInViewRadius.Length == 2){
+                Debug.Log("After target Length equals to 2 " + targetsInViewRadius.Length + " And 0 index have"  + targetsInViewRadius[0]
+                    + " and has a value in 1 index of: " + targetsInViewRadius[1]);
                 crew.Kill(targetsInViewRadius);
             }
         }
@@ -49,11 +50,14 @@ public class FieldOfView : MonoBehaviour{
                 if(!Physics.Raycast (transform.position, dirToTarget, dstToTarget, obstacleMask))
                 {
                     visibleTargets.Add(target);
-           
-                    if (target.gameObject.tag == "Dead") {
-                        crew.ApproachDeadBody(target);
-                        //crew.agent.SetDestination(target.position); // Approaching dead body
-                        
+                    if (!crew.isImpostor)
+                    {
+                        if (target.gameObject.tag == "Dead")
+                        {
+                            crew.ApproachDeadBody(target);
+                            //crew.agent.SetDestination(target.position); // Approaching dead body
+
+                        }
                     }
                  
                     
