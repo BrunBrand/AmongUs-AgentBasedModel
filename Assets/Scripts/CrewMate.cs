@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using System.Linq;
+using UnityEngine.UI;
 
 public class CrewMate : MonoBehaviour{
 
@@ -85,7 +86,8 @@ public class CrewMate : MonoBehaviour{
 
     public List<int> receiveTaskList = new List<int>();
     public List<int> decisionList = new List<int>();
-
+    public List<int> decisionEngineList = new List<int>();
+    public List<int> crewmateThatTheImpostorWillFollowList= new List<int>();
 
     public Vector3 positionOfDraw;
 
@@ -93,14 +95,19 @@ public class CrewMate : MonoBehaviour{
 
     public int[] tasksArray;
     public int[] decisionArray;
+    public int[] decisionEngineArray;
+    public int[] crewmateThatTheImpostorWillFollowArray;
 
     //private int tasks = 9;
 
     public int counter = 0;
 
-    public int aleatory;
+    
 
     public int movementSet; // controls the flow of decisions to ensure the correct assignment
+
+    public int task = 0;
+    public int aleatory;
 
     public Vector3[] spawnArea =     {new Vector3(-9.19386578f,0.356f,14.1794643f),
                                      new Vector3(-2.86f, 0.356f, 12.58f),
@@ -118,34 +125,51 @@ public class CrewMate : MonoBehaviour{
 
     public int tasks = 7;
     public int indexer = 0;
+    public int followCrew;
+    private int[] quantityOfCrewmates;
 
     void Start(){
-
-        movementSet = 0;
         
-
+        movementSet = 0;
 
         firstMove = true;
-        receiveTask = new int[9];
+        receiveTask = new int[7];
         receiveTask[0] = 10;
+
         index = 0;
         timeData = 6;
-        
-
-        aleatory = Random.Range(0, 8);
 
         dataPosition = new Vector3[3];
+
         cablePosition = new Vector3[3];
-        enginePosition = new Vector3[3];
+
+        enginePosition = new Vector3[4];
+
         trashPosition = new Vector3[3];
         
+       
 
         explosionPosition = new Vector3[2];
 
-        
+        for (int i = 0; i < 3; i++){
+            decisionList.Add(i);
+        }
 
-      
+        for (int i = 0; i < 4; i++)
+        {
+            decisionEngineList.Add(i);
+        }
 
+
+        for (int i = 0; i < 8; i++)
+        {
+            crewmateThatTheImpostorWillFollowList.Add(i);
+        }
+
+        crewmateThatTheImpostorWillFollowArray = receiveTaskList.OrderBy(tvz => System.Guid.NewGuid()).ToArray();
+
+
+       
         data = GameObject.FindGameObjectsWithTag("Data");
         cable = GameObject.FindGameObjectsWithTag("Cable");
         engine = GameObject.FindGameObjectsWithTag("Engine");
@@ -161,23 +185,19 @@ public class CrewMate : MonoBehaviour{
 
 
         crewmates = GameObject.FindGameObjectsWithTag("Crewmate");
-
         allCrewMembers = FindGameObjecstWithLayer(8);
         
         // assign task for crewmates (impostor will be 10 forever, id est, he doesn't do nothing)
         if (!isImpostor){
   
-           for (int i = 0; i < 9; i++)
+           for (int i = 0; i < receiveTask.Length; i++)
            {
                receiveTaskList.Add(i);
            }
 
            tasksArray = receiveTaskList.OrderBy(tvz => System.Guid.NewGuid()).ToArray();
 
-           for (int i = 0; i < 9; i++)
-           {
-               print(receiveTaskList[i]);
-           }
+    
             counter = 0;
            foreach (GameObject go in crewmates)
            {
@@ -187,17 +207,12 @@ public class CrewMate : MonoBehaviour{
                }
                else if (go.tag == "Crewmate")
                {
-                    //receiveTask = receiveTaskList[counter];
-                    Debug.Log("THE BOUND OF THE ARRAY receiveTask is: " + counter);
-                   receiveTask[counter] = tasksArray[counter];
-                   Debug.Log("RECEIVE TASK É : " + receiveTask);
-                   counter++;
+                
+                    receiveTask = tasksArray;
+                    counter++;
                }
            }
-            // the code below is temp inavailable
-            /*for (int i = 0; i < receiveTask.Length; i++){
-                receiveTask[i] = Random.Range(0, 7);
-            }*/
+   
 
 
 
@@ -243,7 +258,8 @@ public class CrewMate : MonoBehaviour{
             walletPosition = wallet.transform.position;
             o2Position = o2.transform.position;
 
-
+            decisionArray = decisionList.OrderBy(tvz => System.Guid.NewGuid()).ToArray();
+            decisionEngineArray = decisionEngineList.OrderBy(tvz => System.Guid.NewGuid()).ToArray();
 
 
         }
@@ -278,6 +294,7 @@ public class CrewMate : MonoBehaviour{
 
     void Update(){
 
+        crewmates = GameObject.FindGameObjectsWithTag("Crewmate");
         switch (isImpostor){
             case true:
                 Wander();
@@ -298,10 +315,19 @@ public class CrewMate : MonoBehaviour{
 
     public void FollowCrewMate()
     {
-        //yield return new WaitForSeconds(10f);
-        if (crewmates[aleatory].transform.tag == "Crewmate")
+        switch (crewmates[aleatory].transform.tag)
         {
-            agent.SetDestination(crewmates[aleatory].transform.position.normalized);
+            case "Crewmate":
+                agent.SetDestination(crewmates[aleatory].transform.position);
+                break;
+
+            case "Dead":
+                aleatory = Random.Range(0, crewmates.Length);
+                break;
+
+        }
+        if (crewmates[aleatory].transform.tag == "Crewmate"){
+            agent.SetDestination(crewmates[aleatory].transform.position);
         } else
         {
 
@@ -344,114 +370,185 @@ public class CrewMate : MonoBehaviour{
             return;
         }
         else{
-            agent.SetDestination(targetInViewRadius[1].gameObject.transform.position);
+            agent.SetDestination(targetInViewRadius[0].gameObject.transform.position);
+            if(Vector3.Distance(targetInViewRadius[0].gameObject.transform.position,  agent.transform.position) < 3f)
+            {
+                targetInViewRadius[0].gameObject.transform.rotation = new Quaternion(272.823975f, 280.937531f, -6.93134498e-05f, 1);
+                targetInViewRadius[0].gameObject.tag = "Dead"; 
+            }
+
         }
 
 
     }
+    
 
 
     // ---------- CrewMate Methods ---------- //
 
 
-    public void MakeADecisionInArrayTask(){
-        //decision = Random.Range(0, 3);
-        for (int i = 0; i < 3; i++)
+    public void MakeADecisionInArrayTask(int definer){
+
+        
+        if (movementSet == definer)
         {
-            decisionList.Add(i);
+            task++;
+            movementSet = 0;
+            firstMove = true;
         }
-
-        decisionArray = decisionList.OrderBy(tvz => System.Guid.NewGuid()).ToArray();
-
-        /*for (int i = 0; i < 3; i++)
+        if (receiveTask[task] == 2)
         {
-            print("ORDEM DO ARRAY DE DECISION: " + tasksArray[i]);
-        }*/
-        decision = decisionArray[movementSet];
-
+            decision = decisionEngineArray[movementSet];
+        }
+        else
+        {
+            decision = decisionArray[movementSet];
+        }
         timer = timeData;
         firstMove = false;
-        movementSet++;
-        if(movementSet == 2){
-            movementSet = 0;
-            tasksArray[indexer] += tasksArray[indexer++];
-        }
-       
     }
 
 
     public void GoToObjectives() {
-        for (int i = 0; i < tasksArray.Length; i++) {
-            switch (tasksArray[i]) {
-                case 0:
+        
+        //for (int i = 0; i < receiveTask.Length; i++) {
+        switch (receiveTask[task]) {
+            case 0:
                   
-                    if (firstMove)
-                    {
-                        MakeADecisionInArrayTask();
-                    }
-                    agent.SetDestination(dataPosition[decision]);
-                 
-                    positionOfDraw = dataPosition[decision];
-                    if (Vector3.Distance(dataPosition[decision], agent.transform.position) < 2f)
-                    {
-                        timer -= Time.deltaTime;
-                        if(timer <= 0)
-                        {
-                            MakeADecisionInArrayTask();
-                        }
-         
-                    }
-                  
-                    break;
-
-                case 1:
-                    agent.SetDestination(cablePosition[decision]);
-          
-                    positionOfDraw = cablePosition[decision];
-                    if (firstMove)
-                    {
-                        MakeADecisionInArrayTask();
-                    }
-                    break;
-
-                case 2:
-                    agent.SetDestination(enginePosition[decision]);
-           
-                    positionOfDraw = enginePosition[decision];
-                    if (firstMove)
-                    {
-                        MakeADecisionInArrayTask();
-                    }
-                    break;
-
-                case 3:
-                    agent.SetDestination(trashPosition[decision]);
-            
-                    positionOfDraw = trashPosition[decision];
-                    if (firstMove)
-                    {
-                        MakeADecisionInArrayTask();
-                    }
-                    break;
-
-                case 4:
-                    agent.SetDestination(scanPosition);
-       
-                    positionOfDraw = scanPosition;
-                    break;
-
-                case 5:
-                    agent.SetDestination(walletPosition);
-                    positionOfDraw = walletPosition;
-                    break;
-
-                case 6:
-                    agent.SetDestination(padPosition);
-                    positionOfDraw = padPosition;
-                    break;
+                if (firstMove)
+                {
+                    MakeADecisionInArrayTask(3);
                 }
+                agent.SetDestination(dataPosition[decision]);
+                 
+                positionOfDraw = dataPosition[decision];
+                if (Vector3.Distance(dataPosition[decision], agent.transform.position) < 3f)
+                {
+                        
+                    timer -= Time.deltaTime;
+                    if(timer <= 0)
+                    {
+                        movementSet++;
+                        MakeADecisionInArrayTask(3);
+                    }
+         
+                }
+                  
+                break;
+
+            case 1:
+                agent.SetDestination(cablePosition[decision]);
+          
+                positionOfDraw = cablePosition[decision];
+                if (firstMove)
+                {
+                    MakeADecisionInArrayTask(3);
+                }
+                if(Vector3.Distance(cablePosition[decision], agent.transform.position) < 3f)
+                {
+                    timer -= Time.deltaTime;
+                    if(timer <= 0){
+                        movementSet++;
+                        MakeADecisionInArrayTask(3);
+                    }
+                }
+                break;
+
+            case 2:
+                agent.SetDestination(enginePosition[decision]);
+           
+                positionOfDraw = enginePosition[decision];
+                if (firstMove)
+                {
+                    MakeADecisionInArrayTask(4);
+                }
+                if (Vector3.Distance(enginePosition[decision], agent.transform.position) < 3f)
+                {
+                    timer -= Time.deltaTime;
+                    if (timer <= 0)
+                    {
+                        movementSet++;
+                        MakeADecisionInArrayTask(4);
+                    }
+                }
+                break;
+
+            case 3:
+                agent.SetDestination(trashPosition[decision]);
+            
+                positionOfDraw = trashPosition[decision];
+                if (firstMove)
+                {
+                    MakeADecisionInArrayTask(3);
+                }
+                if (Vector3.Distance(trashPosition[decision], agent.transform.position) < 3f)
+                {
+                    timer -= Time.deltaTime;
+                    if (timer <= 0)
+                    {
+                        movementSet++;
+                        MakeADecisionInArrayTask(3);
+                    }
+                }
+                break;
+
+            case 4:
+                agent.SetDestination(scanPosition);
+                positionOfDraw = scanPosition;
+                if (Vector3.Distance(scanPosition, agent.transform.position) < 3f)
+                {
+                    timer -= Time.deltaTime;
+                    if (timer <= 0)
+                    {
+                        /*if(receiveTask[task+1] >= 0 && receiveTask[task+1] <= 3)
+                        {
+                        
+                        } else*/ if( receiveTask[task+1] >= 4 && receiveTask[task+1] <= 7)
+                        {
+                            task++;
+                        }
+                        
+                    }
+                }
+
+                break;
+
+            case 5:
+                agent.SetDestination(walletPosition);
+                positionOfDraw = walletPosition;
+                
+                if (Vector3.Distance(walletPosition, agent.transform.position) < 3f)
+                {
+                    timer -= Time.deltaTime;
+                    if (timer <= 0)
+                    {
+                        if (receiveTask[task + 1] >= 4 && receiveTask[task + 1] <= 7)
+                        {
+                            task++;
+                        }
+                    }
+                }
+                break;
+
+            case 6:
+                agent.SetDestination(padPosition);
+                positionOfDraw = padPosition;
+                
+                if (Vector3.Distance(padPosition, agent.transform.position) < 3f)
+                {
+                    timer -= Time.deltaTime;
+                    if (timer <= 0)
+                    {
+                        if (receiveTask[task + 1] >= 4 && receiveTask[task + 1] <= 7)
+                        {
+                            task++;
+                        }
+                    }
+                }
+                break;
             }
-        }
+        //}
+    }
     
 
     public void ApproachDeadBody(Transform target){

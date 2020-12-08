@@ -23,8 +23,29 @@ public class Agents : MonoBehaviour
 
     GameObject crewMate;
 
+    public bool startButtonIsClicked;
 
-    void Awake()
+    void Awake(){
+        startButtonIsClicked = false;
+        if (startButtonIsClicked)
+        {
+            StartAgents();
+        }
+           
+          
+
+
+
+        
+
+
+
+
+
+
+    }
+
+    public void StartAgents()
     {
         Vector3[] spawnArea =       {new Vector3(-9.19386578f,0.356f,14.1794643f),
                                      new Vector3(-2.86f, 0.356f, 12.58f),
@@ -40,7 +61,7 @@ public class Agents : MonoBehaviour
 
         };
 
-    
+
 
         _impostorChooser = Random.Range(0, 9);
         for (int i = 0; i < prefabs.Length; i++)
@@ -83,21 +104,7 @@ public class Agents : MonoBehaviour
                 }
             }*/
         }
-           
-          
-
-
-
-        
-
-
-
-
-
-
     }
-
-
 
     /*public void GoToSpawnArea(){
         for(int i = 0; i < 9 ; i++){

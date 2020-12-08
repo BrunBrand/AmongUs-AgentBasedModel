@@ -32,9 +32,12 @@ public class FieldOfView : MonoBehaviour{
         visibleTargets.Clear();
         Collider[] targetsInViewRadius = Physics.OverlapSphere(transform.position, viewRadius, targetMask);
 
-        if(targetsInViewRadius.Length == 2)
+        if (crew.isImpostor)
         {
-            crew.Kill(targetsInViewRadius);
+            if (targetsInViewRadius.Length == 1)
+            {
+                crew.Kill(targetsInViewRadius);
+            }
         }
         for(int i = 0; i < targetsInViewRadius.Length; i++){
             Transform target = targetsInViewRadius[i].transform;
@@ -58,10 +61,7 @@ public class FieldOfView : MonoBehaviour{
                     
                 }
 
-                /*if(Physics.Raycast(transform.position, dirToTarget, dstToTarget, targetMask))
-                {
-                    Debug.Log("THERE IS NO ONE THERE !!!!!!");
-                }*/
+            
             }
         }
     }
