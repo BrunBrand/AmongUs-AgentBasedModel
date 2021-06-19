@@ -4,10 +4,6 @@
 ### Designers: [LuisEduardoBF](https://github.com/LuisEduardoBF) and [LordFarron](https://github.com/LordFarron)
 
 
-
-#### The code is a mess, i'm going to clean it later
-
-
 ## What is this repo
 
 The purpose of this repo is to be presented as a project for my class of computational modeling, unfortunately, as i was creating another model on netlogo for the entire semester, and only change to unity a week before the deadline, I did not have the time to finish it. This model is inspired by a game made by InnerSloth called Among Us. My model is concerned about the Artificial Intelligence and manipulation of attributes by the user. I have implemented the basic parts of it, that is the selection of crewmates and impostors.
