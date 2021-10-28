@@ -1,7 +1,7 @@
 # AmongUs-AgentBasedModel
 #### Among Us but it's all AI
 ### Developer: BrunBrad
-### Designers: [LuisEduardoBF](https://github.com/LuisEduardoBF) and [LordFarron](https://github.com/BrunBrand)
+### Designers: [LuisEduardoBF](https://github.com/LuisEduardoBF) and [BrunBrand](https://github.com/BrunBrand)
 
 
 ## What is this repo
